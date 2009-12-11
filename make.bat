@@ -15,13 +15,6 @@
 @IF "%WINHPCDIR%" == "" set WINHPCDIR="c:\WinHPC"
 @IF "%WINHPCDIR%" == "" goto err_mpi_not_found
 
-@REM /RTC{s,c,u} : stack frame runtime checking, convert checks, unininitialized checks
-@REM /Wall, /we : warning level 4, warning as error
-@REM /J : unsigned char
-@REM /ZI: debug info
-@REM /O2: maximize speed
-@REM /Og: global opt
-@REM /D : define
 
 @set LIBS= kernel32.lib msmpi.lib
 @set LIBDIRS=/LIBPATH:%WINHPCDIR%\lib\i386
@@ -38,7 +31,11 @@ REM @echo "done"
 REM @goto end
 
 :run
-%WINHPCDIR%\bin\mpiexec -n 4 hellompi%VER%.exe
+
+set NCPUS=4
+@IF "%VER%" == "05" set NCPUS=8
+
+%WINHPCDIR%\bin\mpiexec -n %NCPUS% hellompi%VER%.exe
 @goto end
 
 :err_mpi_not_found
