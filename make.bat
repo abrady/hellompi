@@ -6,7 +6,10 @@
 
 :after_vcvars
 
-@IF /I "%1" == "RUN" goto run
+@IF /I "%1" == "RUN" (
+	set VER=%2
+	goto run
+	)
 @IF "%1" == "" (set VER=02) ELSE (set VER=%1)
 
 @IF "%WINHPCDIR%" == "" set WINHPCDIR="c:\WinHPC"
@@ -31,11 +34,11 @@
 cl /MP /analyze:stacksize 38000 /analyze /J /W4 %FLAGS% %INCDIRS% %INPUTS% /link /ALLOWISOLATION:NO %LIBDIRS%
 @if NOT "%ERRORLEVEL%"=="0" goto error
 
-@echo "done"
-@goto end
+REM @echo "done"
+REM @goto end
 
 :run
-%WINHPCDIR%\bin\mpiexec -n 4 hellompi%2%.exe
+%WINHPCDIR%\bin\mpiexec -n 4 hellompi%VER%.exe
 @goto end
 
 :err_mpi_not_found
