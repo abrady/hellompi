@@ -28,6 +28,16 @@
 
 #pragma warning(disable:4996)
 
+typedef int S32;
+typedef unsigned int U32;
+typedef unsigned __int64 U64;
+typedef __int64 S64;
+typedef volatile __int64 VS64; 
+typedef volatile unsigned __int64 VU64;
+typedef unsigned char U8;
+typedef signed char S8;
+
+
 #define DIMOF(A) (sizeof(A)/sizeof(*(A)))
 #define INRANGE(N,S,E) (((N)>=(S)) && ((N)<E))
 #define INRANGE0(N,E) INRANGE(N,0,E)
