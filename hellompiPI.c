@@ -5,7 +5,9 @@
  * Module Description:
  *  - MPI_Scatter, MPI_Gather
  *
- * figure out how many times a given string appears in PI in a given range.
+ * Find a given string as a bit pattern in PI.
+ * (this is a little cheesy. it just chops off each 32 bit block and converts it into an a letter from a-z, or just 0 for the extras).
+ *
  ***************************************************************************/
 #include "hellompi.h"
 #include "mpi.h"
@@ -13,11 +15,6 @@
 #include <string.h>
 
 char pi_main(int id);
-
-// void error_func( MPI_Comm *, int *, ... )
-// {	
-// }
-
 
 int main(int argc, char **argv)
 {
@@ -27,20 +24,25 @@ int main(int argc, char **argv)
 	int dest;
 	int i;
 	int numtasks, rank, sendcount, source;
-	U64 *sendbuf;
+	int *sendbuf;
 	int recvbuf[2];
 	int *gatherbuf;
-	U64 range = 2000; // the highest location in PI to look
-	char *match = "ab";
-	U64 slice;
+	int range = 20000; // the highest location in PI to look
+	char *match = "abc";
+	int slice;
 	
 	MPI_Init(&argc,&argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
+	MPI_Comm_size(MPI_COMM_WORLD, &numtasks);	
+
+	// if(rank == 0)
+	// {
+	// 	fprintf(stderr,"debugging...");
+	// 	WAIT_FOR_DEBUGGER();
+	// 	fprintf(stderr,"attached\n");
+	// }
 	
-//	MPI_Errhandler_create(error_func, 
-	MPI_Errhandler_set(MPI_COMM_WORLD, MPI_ERRORS_RETURN);
-	
+
 	if(argc > 1)
 		match = argv[1];
 
@@ -70,8 +72,7 @@ int main(int argc, char **argv)
 	// task 1 is sending the buffer out to all tasks.  The send 
 	// buffer is chopped up and sent to all tasks. All other tasks
 	// ignore sendbuf and block until they receive this info.
-	MPI_Scatter(sendbuf,sendcount,MPI_FLOAT,recvbuf,sendcount,
-				MPI_FLOAT,source,MPI_COMM_WORLD);
+	MPI_Scatter(sendbuf,2,MPI_INT,recvbuf,2,MPI_INT,source,MPI_COMM_WORLD);
 	
 	s = match;
 	num_matches = 0;
@@ -82,18 +83,17 @@ int main(int argc, char **argv)
 		if(*s == c)
 		{	
 			s++;
-			if(!*s)
+			if(!s[1])
 				num_matches++;
 		}
-		else
-			s = match;
+		s = match;
 	}
 
 	
 	// each task now has a slice of the buffer
 	// task 0: 1 2 3 4
 	// task 1: 4 5 6 7
-	printf("rank= %d  Result: %i matches \n", rank, num_matches);
+	printf("rank= %d  Result: %i matches in range %i to %i\n", rank, num_matches, recvbuf[0], recvbuf[1]);
 
 	// this is only for readability, printf can lag behind so the
 	// outputs might be intrleaved.
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
 	// ----------------------------------------
 	// gather the results back to a different task
 
-	// 'recvbuf' is what this task received from task 1, but it is being re-sent
+
 	dest = 0;
 	if(rank == dest)
 		gatherbuf = calloc(sizeof(*gatherbuf),numtasks);
@@ -150,9 +150,10 @@ int main(int argc, char **argv)
 
 char pi_main(int id)
 {
+  static char lookup[32] = "abcdefghijklmnopqrstuvwxyz";
   double pid, s1, s2, s3, s4;
   double series (int m, int n);
-  double y;
+  double y,z,w;
   void ihex (double x, int m, char c[]);
   int tmp;
   
@@ -165,10 +166,11 @@ char pi_main(int id)
   pid = 4. * s1 - 2. * s2 - s3 - s4;
   pid = pid - (int) pid + 1.;
   
-  y = fabs (pid);
-  y = 128. * (y - floor(y));
+  z = fabs (pid);
+  w = (z - floor(z));
+  y = 32. * w;
   tmp = (int)y;
-  return (char)tmp;
+  return lookup[tmp];
 }
 
 /*main()

@@ -24,6 +24,7 @@
 
 @REM /link /NODEFAULTLIB:MSVCR80D
 @REM /ALLOWISOLATION:NO : turn off manifest look up for some crt library
+set FLAGS=/RTCscu /ZI  /MTd
 cl /MP /analyze:stacksize 38000 /analyze /J /W4 %FLAGS% %INCDIRS% %INPUTS% /link /ALLOWISOLATION:NO %LIBDIRS%
 @if NOT "%ERRORLEVEL%"=="0" goto error
 

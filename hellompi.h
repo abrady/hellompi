@@ -43,4 +43,19 @@ typedef signed char S8;
 #define INRANGE0(N,E) INRANGE(N,0,E)
 
 
+#ifdef _DEBUG 
+#include <winbase.h>  // for IsDebuggerPresent
+#define break_if_debugging() { static int skip_this_bp = 0; ((!skip_this_bp && (IsDebuggerPresent()))?DebugBreak(),1:1); }
+#else
+
+#define break_if_debugging() 0
+#endif
+
+#define WAIT_FOR_DEBUGGER() while(!IsDebuggerPresent()){ Sleep(1); }
+
+
+
+#define abassert(C) {break_if_debugging();assert(C);}
+
+
 #endif //HELLOMPI_H
