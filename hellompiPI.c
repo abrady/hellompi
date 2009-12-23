@@ -150,7 +150,7 @@ int main(int argc, char **argv)
 
 char pi_main(int id)
 {
-  static char lookup[32] = "abcdefghijklmnopqrstuvwxyz";
+  static char lookup[32] = "abcdefghijklmnopqrstuvwxyz:;,_-.";
   double pid, s1, s2, s3, s4;
   double series (int m, int n);
   double y,z,w;
