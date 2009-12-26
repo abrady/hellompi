@@ -1,0 +1,9 @@
+*~
+*.exe
+*.obj
+*.abs
+*.ilk
+*.pdb
+*.el
+*.idb
+*.org
