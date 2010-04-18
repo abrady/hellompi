@@ -7,6 +7,7 @@
  *
  ***************************************************************************/
 #include "hellompi.h"
+#include "assert.h"
 #include "mpi.h"
 #include <stdio.h>
 #include <string.h>
@@ -40,6 +41,8 @@ int main(int argc, char *argv[])
 		char bufsend[32][BUFSIZE] = {0};
 		char bufrecv[32][BUFSIZE] = {0};
 		
+		assert(numprocs < DIMOF(bufsend));
+
 		MPI_Get_processor_name(procname,&n);
 		printf("processor name %s\n",procname);
 		printf("%d: We have %d processors\n", myid, numprocs);
