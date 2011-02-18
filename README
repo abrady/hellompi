@@ -1,0 +1,38 @@
+Summary: 
+
+The HelloMPI is a series of basic MPI programs designed to run on the Windows High Performance Computing MPI implementation.
+
+Setup:
+
+- Download the windows high performance computing SDK
+-- HPC Pack SDK: http://www.microsoft.com/downloads/details.aspx?familyid=12887DA1-9410-4A59-B903-693116BFD30E&displaylang=en
+- Install it to c:/WinHPC, or set the WINHPCDIR in your environment to the install directory
+- Make sure you have a Microsoft compiler installed.
+-- Windows SDK is free: http://msdn.microsoft.com/en-us/windows/bb980924.aspx
+-- you may also want a debugger, windbg is free as well: http://www.microsoft.com/whdc/DevTools/Debugging/default.mspx
+- add the compiler to your path, or run these examples in a development console
+-- starting a dev console if you have Visual Studio installed is usually done by running 'Visual Studio 200X Command Prompt' under the start menu.
+-- you can also manually run vcvars.bat: c:\Program Files\Microsoft Visual Studio 8\VC\bin\vcvars32.bat
+
+Running:
+
+from your command prompt type make <example> where <example> is something like 01:
+- make 01
+- make PI
+
+This will compile and run the application. 
+
+You can also say make run <example>:
+- make run 01
+
+This will not re-compile, but will just re-run the example
+
+Notes:
+
+The examples here are only a scratch-the-surface set of things you can do with MPI, but sometimes just getting things working basically is the hardest part. 
+
+Please let me know if you have any problems.
+
+Enjoy!
+
+Aaron Brady
